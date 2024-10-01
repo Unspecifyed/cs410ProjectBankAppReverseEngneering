@@ -5,7 +5,7 @@ import subprocess
 directory = "."
 
 # Output file to store the results
-output_file = "local_functions_disassembly.txt"
+output_file = "functions_disassembly.txt"
 
 # Function to run objdump and disassemble the given function
 def disassemble_function_objdump(obj_file):
@@ -19,7 +19,7 @@ def disassemble_function_objdump(obj_file):
 
 # Open the output file for writing
 with open(output_file, "w") as outfile:
-    outfile.write("Local Functions and Their Full Disassembly from Object Files:\n\n")
+    outfile.write("Local and Global Functions and Their Full Disassembly from Object Files:\n\n")
 
     # Iterate through all files in the directory
     for filename in os.listdir(directory):
@@ -35,10 +35,25 @@ with open(output_file, "w") as outfile:
             # Filter local/static functions (symbol type 't')
             local_functions = [line for line in lines if " t " in line]
 
+            # Filter global functions (symbol type 'T')
+            global_functions = [line for line in lines if " T " in line]
+
             # If there are local functions, process them with objdump
             if local_functions:
                 outfile.write(f"File: {filename}\n")
+                outfile.write("Local Functions:\n")
                 
+                # Disassemble the entire object file using objdump
+                disassembly = disassemble_function_objdump(filename)
+
+                # Write the full disassembly to the output file
+                outfile.write(f"{disassembly}\n")
+
+            # If there are global functions, process them with objdump
+            if global_functions:
+                outfile.write(f"File: {filename}\n")
+                outfile.write("Global Functions:\n")
+
                 # Disassemble the entire object file using objdump
                 disassembly = disassemble_function_objdump(filename)
 
