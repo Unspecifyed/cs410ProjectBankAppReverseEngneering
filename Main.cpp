@@ -3,6 +3,38 @@
 #include <vector>
 #include <memory> // For std::unique_ptr
 #include <new>
+#include <limits>  // For std::numeric_limits
+
+// added mehods for better stablity 
+void displayMenu() {
+    std::cout << "\n--- User Profile Menu ---\n"
+              << "1. View Active Profile\n"
+              << "2. Modify Active Profile\n"
+              << "3. Check Permission\n"
+              << "4. Exit\n"
+              << "5. Delete Active Profile\n"
+              << "6. Initialize New Profile\n"
+              << "7. Switch Active Profile\n"
+              << "Enter your choice (1-7): ";
+}
+
+int getValidChoice() {
+    int choice;
+    while (true) {
+        std::cin >> choice;
+
+        // Check if input is valid
+        if (std::cin.fail() || choice < 1 || choice > 7) {
+            std::cin.clear(); // Clear the error flag
+            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); // Discard invalid input
+            std::cout << "Invalid choice. Please enter a number between 1 and 7: ";
+        } else {
+            // Valid input
+            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); // Clear buffer
+            return choice;
+        }
+    }
+}
 
 // Simulated structure containing user information
 struct UserProfile {
@@ -26,15 +58,18 @@ std::vector<std::unique_ptr<UserProfile>> userProfiles;
 // Pointer to the currently active user profile
 std::unique_ptr<UserProfile> activeUserProfile = nullptr;
 
-// This function simulates the initialization of a new user profile.
-void initializeProfile(const std::string& username, int age, const std::string& accessLevel) {
-    // Create a new user profile and add it to the vector
-    auto newProfile = std::make_unique<UserProfile>(username, age, accessLevel);
-    userProfiles.push_back(std::move(newProfile));
+void initializeProfile(const std::string &username, int age,
+                       const std::string &accessLevel) {
+  std::unique_ptr<UserProfile> newProfile =
+      std::make_unique<UserProfile>(username, age, accessLevel);
 
-    // Set the newly created profile as the active one
-    activeUserProfile = std::move(userProfiles.back());
-    std::cout << "Profile for " << activeUserProfile->username << " is now active." << std::endl;
+  // Add the new profile to the vector
+  userProfiles.push_back(std::move(newProfile));
+
+  // Set the active profile to the newly created profile
+  activeUserProfile = std::make_unique<UserProfile>(username, age, accessLevel);
+
+  std::cout << "Profile for " << username << " is now active." << std::endl;
 }
 
 // Function to display information from the active user profile.
@@ -97,18 +132,30 @@ void DeleteProfile() {
   std::cout << "Attempting to delete active profile: "
             << activeUserProfile->username << std::endl;
 
+  // Validate that the active user profile's username is not empty
+  if (activeUserProfile->username.empty()) {
+    std::cout << "Error: Active user profile has an invalid username."
+              << std::endl;
+    return;
+  }
+
   // Find the active profile in the vector and remove it
-  for (auto it = userProfiles.begin(); it != userProfiles.end(); ++it) {
-    if ((*it)->username == activeUserProfile->username) {
+  for (auto it = userProfiles.begin(); it != userProfiles.end();) {
+    if (*it && (*it)->username == activeUserProfile->username) {
       std::cout << "Found profile in the vector. Erasing now..." << std::endl;
-      userProfiles.erase(it);    // Remove the profile from the vector
+      it = userProfiles.erase(it); // Correctly update iterator after erase
+
       activeUserProfile.reset(); // Reset the unique_ptr, releasing memory
+      std::cout << "activeUserProfile has been reset." << std::endl;
+
       std::cout << "Active profile deleted successfully." << std::endl;
-      break; // Stop iteration to avoid using the invalid iterator
+      return;
+    } else {
+      ++it;
     }
   }
 
-  std::cout << "Profile not found." << std::endl;
+  std::cout << "Profile not found in the vector." << std::endl;
 }
 
 // Function to switch active user profiles based on username.
@@ -136,70 +183,47 @@ void SwitchProfile() {
 }
 
 int main() {
-    int customerChoice = 0;
+  int choice;
+  bool exitProgram = false;
 
-    std::cout << "CS410 Project 1 Francis Cottrell-Eshaghi" << std::endl; 
-    std::cout << "Reversed Engineering the functonality the user program and refactored to modern code." << std::endl; 
-    std::cout << "Welcome to User Profile Management System!" << std::endl; 
+  while (!exitProgram) {
+    displayMenu();
+    choice = getValidChoice();
 
-    while (true) {
-        // Display menu options
-        std::cout << "\n--- User Profile Menu ---" << std::endl;
-        std::cout << "1. View Active Profile" << std::endl;
-        std::cout << "2. Modify Active Profile" << std::endl;
-        std::cout << "3. Check Permission" << std::endl;
-        std::cout << "4. Exit" << std::endl;
-        std::cout << "5. Delete Active Profile" << std::endl;
-        std::cout << "6. Initialize New Profile" << std::endl;
-        std::cout << "7. Switch Active Profile" << std::endl;
-        std::cout << "Enter your choice (1-7): ";
-        std::cin >> customerChoice;
-
-        switch (customerChoice) {
-            case 1:
-                // View active profile information
-                DisplayInfo();
-                break;
-            case 2:
-                // Modify active profile information
-                ModifyProfile();
-                break;
-            case 3:
-                // Check user permission
-                CheckUserPermissionAccess();
-                break;
-            case 4:
-                // Exit the program
-                std::cout << "Exiting program..." << std::endl;
-                return 0;
-            case 5:
-                // Delete active profile
-                DeleteProfile();
-                break;
-            case 6: {
-                // Initialize a new user profile
-                std::string username;
-                int age;
-                std::string accessLevel;
-
-                std::cout << "Enter username: ";
-                std::cin >> username;
-                std::cout << "Enter age: ";
-                std::cin >> age;
-                std::cout << "Enter access level (e.g., Admin, User): ";
-                std::cin >> accessLevel;
-
-                initializeProfile(username, age, accessLevel);
-                break;
-            }
-            case 7:
-                // Switch active user profile
-                SwitchProfile();
-                break;
-            default:
-                std::cout << "Invalid choice! Please enter a number between 1 and 7." << std::endl;
-        }
+    switch (choice) {
+    case 1:
+      std::cout << "Viewing Active Profile...\n";
+      // Implement view logic
+      break;
+    case 2:
+      std::cout << "Modifying Active Profile...\n";
+      // Implement modify logic
+      break;
+    case 3:
+      std::cout << "Checking Permissions...\n";
+      // Implement permission logic
+      break;
+    case 4:
+      std::cout << "Exiting...\n";
+      exitProgram = true;
+      break;
+    case 5:
+      std::cout << "Deleting Active Profile...\n";
+      // Implement delete logic
+      break;
+    case 6:
+      std::cout << "Initializing New Profile...\n";
+      // Implement initialize logic
+      break;
+    case 7:
+      std::cout << "Switching Active Profile...\n";
+      // Implement switch profile logic
+      break;
+    default:
+      std::cout << "Invalid input. Please try again.\n";
+      break;
     }
+  }
 
-    return 0;
+  return 0;
 }
