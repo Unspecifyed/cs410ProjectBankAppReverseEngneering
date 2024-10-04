@@ -89,22 +89,26 @@ int CheckUserPermissionAccess() {
 
 // Function to delete the active user profile.
 void DeleteProfile() {
-    if (!activeUserProfile) {
-        std::cout << "No active user profile available to delete." << std::endl;
-        return;
-    }
+  if (!activeUserProfile) {
+    std::cout << "No active user profile available to delete." << std::endl;
+    return;
+  }
 
-    // Find the active profile in the vector and remove it
-    for (auto it = userProfiles.begin(); it != userProfiles.end(); ++it) {
-        if ((*it)->username == activeUserProfile->username) {
-            userProfiles.erase(it);  // Remove the profile from the vector
-            activeUserProfile.reset();  // Reset the unique_ptr, releasing memory
-            std::cout << "Active profile deleted successfully." << std::endl;
-            return;
-        }
-    }
+  std::cout << "Attempting to delete active profile: "
+            << activeUserProfile->username << std::endl;
 
-    std::cout << "Profile not found in list." << std::endl;
+  // Find the active profile in the vector and remove it
+  for (auto it = userProfiles.begin(); it != userProfiles.end(); ++it) {
+    if ((*it)->username == activeUserProfile->username) {
+      std::cout << "Found profile in the vector. Erasing now..." << std::endl;
+      userProfiles.erase(it);    // Remove the profile from the vector
+      activeUserProfile.reset(); // Reset the unique_ptr, releasing memory
+      std::cout << "Active profile deleted successfully." << std::endl;
+      break; // Stop iteration to avoid using the invalid iterator
+    }
+  }
+
+  std::cout << "Profile not found." << std::endl;
 }
 
 // Function to switch active user profiles based on username.
