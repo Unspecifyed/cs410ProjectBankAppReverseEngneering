@@ -183,7 +183,7 @@ void SwitchProfile() {
 }
 
 int main() {
-  int choice;
+  int choice=0;
   bool exitProgram = false;
 
   while (!exitProgram) {
@@ -193,15 +193,15 @@ int main() {
     switch (choice) {
     case 1:
       std::cout << "Viewing Active Profile...\n";
-      // Implement view logic
+      DisplayInfo();
       break;
     case 2:
       std::cout << "Modifying Active Profile...\n";
-      // Implement modify logic
+      ModifyProfile();
       break;
     case 3:
       std::cout << "Checking Permissions...\n";
-      // Implement permission logic
+      CheckUserPermissionAccess();
       break;
     case 4:
       std::cout << "Exiting...\n";
@@ -209,15 +209,24 @@ int main() {
       break;
     case 5:
       std::cout << "Deleting Active Profile...\n";
-      // Implement delete logic
+      DeleteProfile();
       break;
     case 6:
+      std::string username;
+      int age;
+      std::string accessLevel;
       std::cout << "Initializing New Profile...\n";
-      // Implement initialize logic
+      std::cout << "Enter username: ";
+      std::cin >> username;
+      std::cout << "Enter age: ";
+      std::cin >> age;
+      std::cout << "Enter access level (e.g., Admin, User): ";
+      std::cin >> accessLevel;
+      initializeProfile(username, age, accessLevel);
       break;
     case 7:
       std::cout << "Switching Active Profile...\n";
-      // Implement switch profile logic
+      SwitchProfile();
       break;
     default:
       std::cout << "Invalid input. Please try again.\n";
