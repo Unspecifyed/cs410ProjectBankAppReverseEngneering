@@ -1,20 +1,16 @@
 #include "bank.h"
 #include <iostream>
 #include <fstream>
-#include <sstream>
 #include <jsoncpp/json/json.h>
 #include <openssl/sha.h>
 #include <iomanip>
+#include <vector>
 
-Bank::Bank() {
-    LoadClientsFromJson();
+void addClient(ClientMap& clients, const std::string& username, const std::string& password, unsigned int dollars, uint8_t cents) {
+    clients[username] = Client{username, hashPassword(password), dollars, cents};
 }
 
-Bank::~Bank() {
-    SaveClientsToJson();
-}
-
-void Bank::LoadClientsFromJson() {
+void loadClientsFromJson(ClientMap& clients) {
     std::ifstream inFile("clients.json");
     if (!inFile.is_open()) {
         std::cerr << "No client data found, starting fresh." << std::endl;
@@ -30,22 +26,21 @@ void Bank::LoadClientsFromJson() {
         unsigned int dollars = clientJson["dollars"].asUInt();
         uint8_t cents = static_cast<uint8_t>(clientJson["cents"].asUInt());
 
-        clients.emplace(username, Client(username, passwordHash, dollars, cents));
+        clients[username] = Client{username, passwordHash, dollars, cents};
     }
-
-    inFile.close();
 }
 
-void Bank::SaveClientsToJson() const {
+void saveClientsToJson(const ClientMap& clients) {
     Json::Value root;
     Json::Value clientList(Json::arrayValue);
 
     for (const auto& [username, client] : clients) {
         Json::Value clientJson;
-        clientJson["username"] = client.getUsername();
-        clientJson["passwordHash"] = client.getPasswordHash();
-        clientJson["dollars"] = client.getDollars();
-        clientJson["cents"] = client.getCents();
+        clientJson["username"] = client.username;
+        clientJson["passwordHash"] = client.passwordHash;
+        clientJson["dollars"] = client.checkingDollars;
+        clientJson["cents"] = client.checkingCents;
+
         clientList.append(clientJson);
     }
 
@@ -53,66 +48,20 @@ void Bank::SaveClientsToJson() const {
 
     std::ofstream outFile("clients.json");
     outFile << root;
-    outFile.close();
 }
 
-void Bank::RunProgram() {
-    int userChoice = 0;
-    do {
-        std::cout << "1. DISPLAY the client list\n";
-        std::cout << "2. Exit the program\n";
-        std::cin >> userChoice;
+std::string hashPassword(const std::string& password) {
+    // Declare a vector to hold the hash result
+    std::vector<unsigned char> hash(SHA256_DIGEST_LENGTH);  // SHA256_DIGEST_LENGTH is a constant size
 
-        if (userChoice == 1) {
-            DisplayInfo();
-        } else if (userChoice != 2) {
-            std::cout << "Invalid option, please try again." << std::endl;
-        }
-    } while (userChoice != 2);
-}
+    // Generate the SHA256 hash and store it in the vector
+    SHA256(reinterpret_cast<const unsigned char*>(password.c_str()), password.length(), hash.data());
 
-void Bank::AddClient(const std::string& username, const std::string& password, unsigned int dollars, uint8_t cents) {
-    std::string passwordHash = HashPassword(password);
-    clients.emplace(username, Client(username, passwordHash, dollars, cents));
-}
-
-bool Bank::CheckUserPermissionAccess() {
-    std::string username, password;
-    std::cout << "Enter your username: ";
-    std::cin >> username;
-    std::cout << "Enter your password: ";
-    std::cin >> password;
-
-    auto it = clients.find(username);
-    if (it != clients.end() && it->second.getPasswordHash() == HashPassword(password)) {
-        std::cout << "Access granted." << std::endl;
-        return true;
-    } else {
-        std::cout << "Invalid username or password." << std::endl;
-        return false;
-    }
-}
-
-void Bank::DisplayInfo() {
-    std::cout << "Client's Name    Balance (Dollars.Cents)\n";
-    std::cout << "----------------------------------------\n";
-    for (const auto& [username, client] : clients) {
-        std::cout << username << "    " << client.getDollars() << "." << (int)client.getCents() << std::endl;
-    }
-}
-
-std::string Bank::HashPassword(const std::string& password) const {
-    // Use std::array instead of raw array for safety and bounds checking
-    std::array<unsigned char, SHA256_DIGEST_LENGTH> hash;
-    
-    // Hash the password using SHA256
-    SHA256(reinterpret_cast<const unsigned char*>(password.c_str()), password.size(), hash.data());
-    
-    // Convert the hash to a hexadecimal string
+    // Convert the vector of bytes to a string (hexadecimal)
     std::stringstream ss;
-    for (const auto& byte : hash) {
+    for (unsigned char byte : hash) {
         ss << std::hex << std::setw(2) << std::setfill('0') << static_cast<int>(byte);
     }
-    
-    return ss.str();
+
+    return ss.str();  // Return the hash as a hex string
 }
