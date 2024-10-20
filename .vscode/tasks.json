@@ -2,6 +2,19 @@
     "version": "2.0.0",
     "tasks": [
         {
+            "label": "build Google Test from source",
+            "type": "shell",
+            "command": "bash",
+            "args": [
+                "-c",
+                "cd /usr/src/gtest && sudo rm -rf CMakeFiles CMakeCache.txt && sudo cmake -DCMAKE_CXX_COMPILER=clang++ . && sudo make"
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": false
+            }
+        },
+        {
             "label": "build Program",
             "type": "shell",
             "command": "clang++",
@@ -14,26 +27,17 @@
                 "-I",
                 "${workspaceFolder}",
                 "-I",
-                "/usr/include/jsoncpp",  // Correct include path for jsoncpp
+                "/usr/include/jsoncpp",
+                "-I",
+                "/usr/src/gtest/include",  // Include Google Test headers
                 "-L",
-                "/lib/x86_64-linux-gnu",
-                "-ljsoncpp",              // Link jsoncpp
+                "/usr/src/gtest/lib",  // Link Google Test libraries
+                "-lgtest",
+                "-lgtest_main",
                 "-lpthread",
                 "-lssl",
-                "-lcrypto"
-            ],
-            "group": {
-                "kind": "build",
-                "isDefault": true
-            }
-        },
-        {
-            "label": "build and run Program",
-            "type": "shell",
-            "command": "bash",
-            "args": [
-                "-c",
-                "clang++ -std=c++17 -g ${workspaceFolder}/*.cpp -o ${workspaceFolder}/output -I ${workspaceFolder} -I /usr/include/jsoncpp -L /lib/x86_64-linux-gnu -ljsoncpp -lpthread -lssl -lcrypto && ${workspaceFolder}/output"
+                "-lcrypto",
+                "-ljsoncpp"
             ],
             "group": {
                 "kind": "build",
@@ -41,16 +45,42 @@
             }
         },
         {
-            "label": "build and run Test",
+            "label": "build Test",
             "type": "shell",
             "command": "bash",
             "args": [
                 "-c",
-                "clang++ -std=c++17 -g ${workspaceFolder}/test/test.cpp ${workspaceFolder}/*.cpp -o ${workspaceFolder}/test/test_output -I ${workspaceFolder} -I /usr/include/jsoncpp -L /lib/x86_64-linux-gnu -lgtest -lgtest_main -lpthread -lssl -lcrypto -ljsoncpp && ${workspaceFolder}/test/test_output"
+                "clang++ -std=c++17 -g ${workspaceFolder}/test/test.cpp ${workspaceFolder}/*.cpp -o ${workspaceFolder}/test/test_output -I ${workspaceFolder} -I /usr/include/jsoncpp -I /usr/src/gtest/include -L /usr/src/gtest/lib -lgtest -lgtest_main -lpthread -lssl -lcrypto -ljsoncpp"
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": false
+            }
+        },
+        {
+            "label": "run Test",
+            "type": "shell",
+            "command": "bash",
+            "args": [
+                "-c",
+                "${workspaceFolder}/test/test_output"
             ],
             "group": {
                 "kind": "test",
-                "isDefault": true
+                "isDefault": false
+            }
+        },
+        {
+            "label": "build and run all",
+            "type": "shell",
+            "command": "bash",
+            "args": [
+                "-c",
+                "clang++ -std=c++17 -g ${workspaceFolder}/test/test.cpp ${workspaceFolder}/*.cpp -o ${workspaceFolder}/test/test_output -I ${workspaceFolder} -I /usr/include/jsoncpp -I /usr/src/gtest/include -L /usr/src/gtest/lib -lgtest -lgtest_main -lpthread -lssl -lcrypto -ljsoncpp && ${workspaceFolder}/test/test_output"
+            ],
+            "group": {
+                "kind": "test",
+                "isDefault": true  // Default task to build program, build test, and run test
             }
         }
     ]
