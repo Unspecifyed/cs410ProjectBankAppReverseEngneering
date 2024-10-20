@@ -13,8 +13,11 @@
                 "${workspaceFolder}/output",
                 "-I",
                 "${workspaceFolder}",
+                "-I",
+                "/usr/include/jsoncpp",  // Correct include path for jsoncpp
                 "-L",
                 "/lib/x86_64-linux-gnu",
+                "-ljsoncpp",              // Link jsoncpp
                 "-lpthread",
                 "-lssl",
                 "-lcrypto"
@@ -25,12 +28,25 @@
             }
         },
         {
+            "label": "build and run Program",
+            "type": "shell",
+            "command": "bash",
+            "args": [
+                "-c",
+                "clang++ -std=c++17 -g ${workspaceFolder}/*.cpp -o ${workspaceFolder}/output -I ${workspaceFolder} -I /usr/include/jsoncpp -L /lib/x86_64-linux-gnu -ljsoncpp -lpthread -lssl -lcrypto && ${workspaceFolder}/output"
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": false
+            }
+        },
+        {
             "label": "build and run Test",
             "type": "shell",
             "command": "bash",
             "args": [
                 "-c",
-                "clang++ -std=c++17 -g ${workspaceFolder}/test/test.cpp ${workspaceFolder}/*.cpp -o ${workspaceFolder}/test/test_output -I ${workspaceFolder} -L /lib/x86_64-linux-gnu -lgtest -lgtest_main -lpthread -lssl -lcrypto && ${workspaceFolder}/test/test_output"
+                "clang++ -std=c++17 -g ${workspaceFolder}/test/test.cpp ${workspaceFolder}/*.cpp -o ${workspaceFolder}/test/test_output -I ${workspaceFolder} -I /usr/include/jsoncpp -L /lib/x86_64-linux-gnu -lgtest -lgtest_main -lpthread -lssl -lcrypto -ljsoncpp && ${workspaceFolder}/test/test_output"
             ],
             "group": {
                 "kind": "test",
