@@ -10,7 +10,7 @@ Let us elaborate on the direct correspondence between the assembly code and the 
 1. Correlating Assembly with the main() Function
 
 C++ Source Code:
-```
+```cpp
 int main() {
     int userChoice = 0;
     do {
@@ -30,7 +30,7 @@ int main() {
 }
 ```
 Key Assembly Code:
-```
+```assembly
 0000000000000000 <main>:
    0: 55                      push   %rbp
    1: 48 89 e5                mov    %rsp, %rbp
@@ -54,7 +54,7 @@ Clarification:
 2. Correlating Assembly with ChangeCustomerChoice()
 
 C++ Source Code:
-```
+```cpp
 void ChangeCustomerChoice() {
     int choice = 0;
     std::cout << "Enter the number of the client that you wish to change: ";
@@ -67,7 +67,7 @@ void ChangeCustomerChoice() {
 }
 ```
 Key Assembly Code:
-```
+```assembly
 000000000000042d <_Z20ChangeCustomerChoicev>:
  42d:  55                     push   %rbp
  42e:  48 89 e5               mov    %rsp, %rbp
@@ -87,7 +87,7 @@ Clarification:
 3. Correlating Assembly with CheckUserPermissionAccess()
 
 C++ Program:
-```
+```cpp
 bool CheckUserPermissionAccess() {
     std::string username, password;
     std::cout << "Enter your username: ";
@@ -105,7 +105,7 @@ bool CheckUserPermissionAccess() {
 }
 ```
 Key Assembly Code:
-```
+```assembly
 0000000000000120 <_Z25CheckUserPermissionAccessv>:
  120:  55                      push   %rbp
  121:  48 89 e5                mov    %rsp, %rbp
@@ -123,7 +123,7 @@ Clarification:
 4. Correlating Assembly with DisplayInfo()
 
 C++ Source Code:
-```
+```cpp
 void DisplayInfo() {
     std::cout << "Client's Name    Service Selected (1 = Brokerage, 2 = Retirement)" << std::endl;
     std::cout << "----------------------------------------" << std::endl;
@@ -132,7 +132,7 @@ void DisplayInfo() {
 }
 ```
 Key Assembly Code:
-```
+```assembly
 0000000000000241 <_Z11DisplayInfov>:
  241:  55                      push   %rbp
  242:  48 89 e5                mov    %rsp, %rbp
