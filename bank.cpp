@@ -4,6 +4,7 @@
 #include <sstream>
 #include <jsoncpp/json/json.h>
 #include <openssl/sha.h>
+#include <iomanip>
 
 Bank::Bank() {
     LoadClientsFromJson();
@@ -101,11 +102,17 @@ void Bank::DisplayInfo() {
 }
 
 std::string Bank::HashPassword(const std::string& password) const {
-    unsigned char hash[SHA256_DIGEST_LENGTH];
-    SHA256((unsigned char*)password.c_str(), password.size(), hash);
+    // Use std::array instead of raw array for safety and bounds checking
+    std::array<unsigned char, SHA256_DIGEST_LENGTH> hash;
+    
+    // Hash the password using SHA256
+    SHA256(reinterpret_cast<const unsigned char*>(password.c_str()), password.size(), hash.data());
+    
+    // Convert the hash to a hexadecimal string
     std::stringstream ss;
-    for (int i = 0; i < SHA256_DIGEST_LENGTH; ++i) {
-        ss << std::hex << (int)hash[i];
+    for (const auto& byte : hash) {
+        ss << std::hex << std::setw(2) << std::setfill('0') << static_cast<int>(byte);
     }
+    
     return ss.str();
 }
