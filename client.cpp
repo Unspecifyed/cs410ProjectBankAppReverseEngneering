@@ -1,12 +1,25 @@
 #include "client.h"
 #include <iostream>
+#include <limits>
 
 bool canDeposit(const Client& client, unsigned int dollars, uint8_t cents) {
-    (void)cents;  // Mark 'cents' as intentionally unused
-    if (client.checkingDollars + dollars < client.checkingDollars) {
+    // First, check if adding cents causes an overflow
+    uint8_t newCents = client.checkingCents + cents;
+    unsigned int carryOverDollars = 0;
+
+    // If the cents are 100 or more, we need to carry over to dollars
+    if (newCents >= 100) {
+        carryOverDollars = newCents / 100;  // Determine how many dollars to carry over
+        newCents = newCents % 100;  // Remaining cents after carry-over
+    }
+
+    // Check for dollar overflow when adding both the dollars and the carry-over
+    if (client.checkingDollars > std::numeric_limits<unsigned int>::max() - dollars - carryOverDollars) {
         std::cout << "Overflow detected in deposit." << std::endl;
         return false;
     }
+
+    // If no overflow detected, return true
     return true;
 }
 
