@@ -16,10 +16,13 @@ public:
     void DisplayInfo();
     
 private:
-    std::unordered_map<std::string, Client> clients;
+    std::unordered_map<std::string, Client> clients;  // No change here
 
+    // Functions related to loading and saving clients
     void LoadClientsFromJson();
     void SaveClientsToJson() const;
+
+    // Utility function to hash passwords
     std::string HashPassword(const std::string& password) const;
 };
 
