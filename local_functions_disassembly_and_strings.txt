@@ -1,4 +1,4 @@
-Local Functions and Their Full Disassembly from Object Files:
+Local Functions, Their Full Disassembly, and Strings from Object Files:
 
 File: Project1.o
 
@@ -330,4 +330,85 @@ Disassembly of section .text:
  552:	e8 a4 ff ff ff       	call   4fb <_Z41__static_initialization_and_destruction_0ii>
  557:	5d                   	pop    %rbp
  558:	c3                   	ret    
+
+Strings and the Functions they belong to:
+String 'Bob Jones' (offset 1456) belongs to function _GLOBAL__sub_I_username
+String 'Sarah Davis' (offset 1472) belongs to function _GLOBAL__sub_I_username
+String 'Amy Friendly' (offset 1488) belongs to function _GLOBAL__sub_I_username
+String 'Johnny Smith' (offset 1504) belongs to function _GLOBAL__sub_I_username
+String 'Carol Spears' (offset 1520) belongs to function _GLOBAL__sub_I_username
+String 'Hello! Welcome to our Investment Company' (offset 1608) belongs to function _GLOBAL__sub_I_username
+String 'Invalid Password. Please try again' (offset 1656) belongs to function _GLOBAL__sub_I_username
+String 'What would you like to do?' (offset 1692) belongs to function _GLOBAL__sub_I_username
+String 'DISPLAY the client list (enter 1)' (offset 1720) belongs to function _GLOBAL__sub_I_username
+String 'CHANGE a client's choice (enter 2)' (offset 1760) belongs to function _GLOBAL__sub_I_username
+String 'Exit the program.. (enter 3)' (offset 1796) belongs to function _GLOBAL__sub_I_username
+String 'You chose ' (offset 1826) belongs to function _GLOBAL__sub_I_username
+String 'Enter your username: ' (offset 1838) belongs to function _GLOBAL__sub_I_username
+String 'Enter your password: ' (offset 1861) belongs to function _GLOBAL__sub_I_username
+String 'Client's Name    Service Selected (1 = Brokerage, 2 = Retirement)' (offset 1888) belongs to function _GLOBAL__sub_I_username
+String 'selected option ' (offset 1960) belongs to function _GLOBAL__sub_I_username
+String 'Enter the number of the client that you wish to change' (offset 2000) belongs to function _GLOBAL__sub_I_username
+String 'Please enter the client's new service choice (1 = Brokerage, 2 = Retirement)' (offset 2056) belongs to function _GLOBAL__sub_I_username
+String 'GCC: (Ubuntu 7.5.0-3ubuntu1~18.04) 7.5.0' (offset 2177) belongs to function _GLOBAL__sub_I_username
+String 'zPLR' (offset 2289) belongs to function _GLOBAL__sub_I_username
+String 'Project1.cpp' (offset 3921) belongs to function _GLOBAL__sub_I_username
+String '_ZStL19piecewise_construct' (offset 3934) belongs to function _GLOBAL__sub_I_username
+String '_ZStL8__ioinit' (offset 3961) belongs to function _GLOBAL__sub_I_username
+String '_Z41__static_initialization_and_destruction_0ii' (offset 3976) belongs to function _GLOBAL__sub_I_username
+String '_GLOBAL__sub_I_username' (offset 4024) belongs to function _GLOBAL__sub_I_username
+String 'name1' (offset 4048) belongs to function _GLOBAL__sub_I_username
+String 'name2' (offset 4054) belongs to function _GLOBAL__sub_I_username
+String 'name3' (offset 4060) belongs to function _GLOBAL__sub_I_username
+String 'name4' (offset 4066) belongs to function _GLOBAL__sub_I_username
+String 'name5' (offset 4072) belongs to function _GLOBAL__sub_I_username
+String 'num1' (offset 4078) belongs to function _GLOBAL__sub_I_username
+String 'num2' (offset 4083) belongs to function _GLOBAL__sub_I_username
+String 'num3' (offset 4088) belongs to function _GLOBAL__sub_I_username
+String 'num4' (offset 4093) belongs to function _GLOBAL__sub_I_username
+String 'num5' (offset 4098) belongs to function _GLOBAL__sub_I_username
+String 'changechoice' (offset 4103) belongs to function _GLOBAL__sub_I_username
+String 'newservice' (offset 4116) belongs to function _GLOBAL__sub_I_username
+String 'password' (offset 4127) belongs to function _GLOBAL__sub_I_username
+String 'answer' (offset 4136) belongs to function _GLOBAL__sub_I_username
+String 'main' (offset 4143) belongs to function _GLOBAL__sub_I_username
+String '_ZSt4cout' (offset 4148) belongs to function _GLOBAL__sub_I_username
+String '_GLOBAL_OFFSET_TABLE_' (offset 4158) belongs to function _GLOBAL__sub_I_username
+String '_ZStlsISt11char_traitsIcEERSt13basic_ostreamIcT_ES5_PKc' (offset 4180) belongs to function _GLOBAL__sub_I_username
+String '_Z25CheckUserPermissionAccessv' (offset 4236) belongs to function _GLOBAL__sub_I_username
+String '_ZSt3cin' (offset 4267) belongs to function _GLOBAL__sub_I_username
+String '_ZNSirsERi' (offset 4276) belongs to function _GLOBAL__sub_I_username
+String '_ZNSolsEi' (offset 4287) belongs to function _GLOBAL__sub_I_username
+String '_ZSt4endlIcSt11char_traitsIcEERSt13basic_ostreamIT_T0_ES6_' (offset 4297) belongs to function _GLOBAL__sub_I_username
+String '_ZNSolsEPFRSoS_E' (offset 4356) belongs to function _GLOBAL__sub_I_username
+String '_Z11DisplayInfov' (offset 4373) belongs to function _GLOBAL__sub_I_username
+String '_Z20ChangeCustomerChoicev' (offset 4390) belongs to function _GLOBAL__sub_I_username
+String 'DW.ref.__gxx_personality_v0' (offset 4416) belongs to function _GLOBAL__sub_I_username
+String '_ZNSaIcEC1Ev' (offset 4444) belongs to function _GLOBAL__sub_I_username
+String '_ZNSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEEC1EPKcRKS3_' (offset 4457) belongs to function _GLOBAL__sub_I_username
+String '_ZNSaIcED1Ev' (offset 4522) belongs to function _GLOBAL__sub_I_username
+String '_ZStrsIcSt11char_traitsIcEERSt13basic_istreamIT_T0_ES6_PS3_' (offset 4535) belongs to function _GLOBAL__sub_I_username
+String '_ZStrsIcSt11char_traitsIcESaIcEERSt13basic_istreamIT_T0_ES7_RNSt7__cxx1112basic_stringIS4_S5_T1_EE' (offset 4595) belongs to function _GLOBAL__sub_I_username
+String '_ZNKSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEE7compareEPKc' (offset 4694) belongs to function _GLOBAL__sub_I_username
+String '_ZNSt7__cxx1112basic_stringIcSt11char_traitsIcESaIcEED1Ev' (offset 4761) belongs to function _GLOBAL__sub_I_username
+String '_Unwind_Resume' (offset 4819) belongs to function _GLOBAL__sub_I_username
+String '__stack_chk_fail' (offset 4834) belongs to function _GLOBAL__sub_I_username
+String '_ZNSt8ios_base4InitC1Ev' (offset 4851) belongs to function _GLOBAL__sub_I_username
+String '__dso_handle' (offset 4875) belongs to function _GLOBAL__sub_I_username
+String '_ZNSt8ios_base4InitD1Ev' (offset 4888) belongs to function _GLOBAL__sub_I_username
+String '__cxa_atexit' (offset 4912) belongs to function _GLOBAL__sub_I_username
+String '.symtab' (offset 8841) belongs to function _GLOBAL__sub_I_username
+String '.strtab' (offset 8849) belongs to function _GLOBAL__sub_I_username
+String '.shstrtab' (offset 8857) belongs to function _GLOBAL__sub_I_username
+String '.rela.text' (offset 8867) belongs to function _GLOBAL__sub_I_username
+String '.data' (offset 8878) belongs to function _GLOBAL__sub_I_username
+String '.bss' (offset 8884) belongs to function _GLOBAL__sub_I_username
+String '.rodata' (offset 8889) belongs to function _GLOBAL__sub_I_username
+String '.gcc_except_table' (offset 8897) belongs to function _GLOBAL__sub_I_username
+String '.rela.init_array' (offset 8915) belongs to function _GLOBAL__sub_I_username
+String '.rela.data.rel.local.DW.ref.__gxx_personality_v0' (offset 8932) belongs to function _GLOBAL__sub_I_username
+String '.comment' (offset 8981) belongs to function _GLOBAL__sub_I_username
+String '.note.GNU-stack' (offset 8990) belongs to function _GLOBAL__sub_I_username
+String '.rela.eh_frame' (offset 9006) belongs to function _GLOBAL__sub_I_username
+String '.group' (offset 9021) belongs to function _GLOBAL__sub_I_username
 
