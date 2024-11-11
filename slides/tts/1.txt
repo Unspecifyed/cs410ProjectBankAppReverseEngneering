@@ -1,0 +1,1 @@
+Welcome everyone to this presentation on the code review of a simple banking system application developed in C++. We will delve into three main categories: Software Design and Engineering, Algorithms and Data Structures, and Databases. In each category, we'll discuss the existing code functionality, analyze it using relevant criteria, and propose practical enhancements.

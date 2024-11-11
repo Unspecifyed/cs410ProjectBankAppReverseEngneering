@@ -1,0 +1,1 @@
+Moving on to Algorithms and Data Structures, the code utilizes standard C++ data structures. An unordered_map is used for efficient client retrieval, and a Client struct holds user credentials and account balances. Passwords are hashed using SHA256, and balances are managed with separate variables for dollars and cents.

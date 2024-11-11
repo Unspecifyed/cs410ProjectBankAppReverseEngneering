@@ -1,0 +1,1 @@
+In the category of Databases, the application currently relies on a JSON file to store and retrieve client data. It reads from the file during initialization and writes back to it upon changes, which allows for data persistence across sessions
