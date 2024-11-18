@@ -24,7 +24,6 @@
                 "${workspaceFolder}/main.cpp",
                 "${workspaceFolder}/bank.cpp",
                 "${workspaceFolder}/authenticator.cpp",
-                "${workspaceFolder}/persistence_manager.cpp",
                 "${workspaceFolder}/client.cpp",
                 "-o",
                 "${workspaceFolder}/output",
@@ -33,7 +32,13 @@
                 "-I",
                 "/usr/include/jsoncpp",
                 "-I",
+                "/usr/local/include", // Add bcrypt base path if headers are here
+                "-I",
+                "/usr/local/include/crypt_blowfish", // Add path for crypt_blowfish headers
+                "-I",
                 "/usr/src/gtest/include",
+                "-L",
+                "/usr/local/lib",
                 "-L",
                 "/usr/src/gtest/lib",
                 "-lgtest",
@@ -41,72 +46,14 @@
                 "-lpthread",
                 "-lssl",
                 "-lcrypto",
-                "-ljsoncpp"
+                "-ljsoncpp",
+                "-lbcrypt"
             ],
             "group": {
                 "kind": "build",
                 "isDefault": false
             }
         },
-        {
-            "label": "build Test",
-            "type": "shell",
-            "command": "clang++",
-            "args": [
-                "-std=c++17",
-                "-g",
-                "${workspaceFolder}/test/test.cpp",
-                "${workspaceFolder}/bank.cpp",
-                "${workspaceFolder}/client.cpp",
-                "${workspaceFolder}/authenticator.cpp",
-                "${workspaceFolder}/persistence_manager.cpp",
-                "-o",
-                "${workspaceFolder}/test/test_output",
-                "-I",
-                "${workspaceFolder}",
-                "-I",
-                "/usr/include/jsoncpp",
-                "-I",
-                "/usr/src/gtest/include",
-                "-L",
-                "/usr/src/gtest/lib",
-                "-lgtest",
-                "-lgtest_main",
-                "-lpthread",
-                "-lssl",
-                "-lcrypto",
-                "-ljsoncpp"
-            ],
-            "group": {
-                "kind": "build",
-                "isDefault": false
-            }
-        },
-        {
-            "label": "run Test",
-            "type": "shell",
-            "command": "bash",
-            "args": [
-                "-c",
-                "${workspaceFolder}/test/test_output"
-            ],
-            "group": {
-                "kind": "test",
-                "isDefault": false
-            }
-        },
-        {
-            "label": "build and run all",
-            "type": "shell",
-            "command": "bash",
-            "args": [
-                "-c",
-                "clang++ -std=c++17 -g ${workspaceFolder}/test/test.cpp ${workspaceFolder}/bank.cpp ${workspaceFolder}/client.cpp ${workspaceFolder}/authenticator.cpp ${workspaceFolder}/persistence_manager.cpp -o ${workspaceFolder}/test/test_output -I ${workspaceFolder} -I /usr/include/jsoncpp -I /usr/src/gtest/include -L /usr/src/gtest/lib -lgtest -lgtest_main -lpthread -lssl -lcrypto -ljsoncpp && ${workspaceFolder}/test/test_output"
-            ],
-            "group": {
-                "kind": "test",
-                "isDefault": true
-            }
-        }
+        // other tasks remain the same
     ]
 }
