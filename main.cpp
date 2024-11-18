@@ -2,17 +2,22 @@
 #include <iostream>
 
 int main() {
-    ClientMap clients;
-    loadClientsFromJson(clients);
+  Bank bank;
 
-    std::string username, password;
-    std::cout << "Enter username: ";
-    std::cin >> username;
-    std::cout << "Enter password: ";
-    std::cin >> password;
+  std::string username, password;
+  std::cout << "Enter username: ";
+  std::cin >> username;
+  std::cout << "Enter password: ";
+  std::cin >> password;
 
-    addClient(clients, username, password, 100, 50);
+  if (bank.authenticateClient(username, password)) {
+    std::cout << "Authentication successful." << std::endl;
+  } else {
+    std::cerr << "Authentication failed." << std::endl;
+  }
 
-    saveClientsToJson(clients);
-    return 0;
+  bank.addClient("new_user", "new_password", 100, 50);
+  bank.saveClients();
+
+  return 0;
 }
