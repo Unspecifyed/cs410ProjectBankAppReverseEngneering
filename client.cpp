@@ -1,60 +1,97 @@
+
 #include "client.h"
-#include <iostream>
-#include <limits>
+#include <stdexcept>
 
-bool canDeposit(const Client& client, unsigned int dollars, uint8_t cents) {
-    // First, check if adding cents causes an overflow
-    uint8_t newCents = client.checkingCents + cents;
-    unsigned int carryOverDollars = 0;
+// Constructor
+Client::Client(const std::string &username, const std::string &passwordHash, unsigned int dollars, uint8_t cents)
+    : username(username), passwordHash(passwordHash), checkingDollars(dollars), checkingCents(cents), overdraftLimit(0) {}
 
-    // If the cents are 100 or more, we need to carry over to dollars
-    if (newCents >= 100) {
-        carryOverDollars = newCents / 100;  // Determine how many dollars to carry over
-        newCents = newCents % 100;  // Remaining cents after carry-over
+// Getters and setters
+const std::string &Client::getUsername() const {
+    return username;
+}
+
+const std::string &Client::getPasswordHash() const {
+    return passwordHash;
+}
+
+unsigned int Client::getCheckingDollars() const {
+    return checkingDollars;
+}
+
+uint8_t Client::getCheckingCents() const {
+    return checkingCents;
+}
+
+void Client::setOverdraftLimit(int limit) {
+    overdraftLimit = limit;
+}
+
+int Client::getOverdraftLimit() const {
+    return overdraftLimit;
+}
+
+void Client::applyInterest(double rate) {
+    if (rate < 0) {
+        throw std::invalid_argument("Interest rate cannot be negative.");
     }
 
-    // Check for dollar overflow when adding both the dollars and the carry-over
-    if (client.checkingDollars > std::numeric_limits<unsigned int>::max() - dollars - carryOverDollars) {
-        std::cout << "Overflow detected in deposit." << std::endl;
+    unsigned int totalCents = checkingDollars * 100 + checkingCents;
+    totalCents = static_cast<unsigned int>(totalCents * (1 + rate));
+
+    checkingDollars = totalCents / 100;
+    checkingCents = totalCents % 100;
+}
+
+// Helper functions
+bool Client::validateAmount(unsigned int dollars, uint8_t cents) const {
+    if (dollars == 0 && cents == 0) {
+        std::cerr << "[ERROR] Amount cannot be zero." << std::endl;
         return false;
     }
-
-    // If no overflow detected, return true
     return true;
 }
 
-bool canWithdraw(const Client& client, unsigned int dollars, uint8_t cents) {
-    if (client.checkingDollars < dollars || 
-        (client.checkingDollars == dollars && client.checkingCents < cents)) {
-        std::cout << "Insufficient funds." << std::endl;
+bool Client::hasSufficientFunds(unsigned int dollars, uint8_t cents) const {
+    int availableFunds = static_cast<int>(checkingDollars) * 100 + checkingCents;
+    int requestedAmount = static_cast<int>(dollars) * 100 + cents;
+
+    return availableFunds + overdraftLimit * 100 >= requestedAmount;
+}
+
+// Operations
+bool Client::deposit(unsigned int dollars, uint8_t cents) {
+    if (!validateAmount(dollars, cents)) {
         return false;
     }
+
+    unsigned int totalCents = checkingDollars * 100 + checkingCents + dollars * 100 + cents;
+
+    checkingDollars = totalCents / 100;
+    checkingCents = totalCents % 100;
+
     return true;
 }
 
-bool deposit(Client& client, unsigned int dollars, uint8_t cents) {
-    if (!canDeposit(client, dollars, cents)) {
+bool Client::withdraw(unsigned int dollars, uint8_t cents) {
+    if (!validateAmount(dollars, cents)) {
         return false;
     }
-    client.checkingDollars += dollars;
-    client.checkingCents += cents;
-    if (client.checkingCents >= 100) {
-        client.checkingDollars += client.checkingCents / 100;
-        client.checkingCents = client.checkingCents % 100;
-    }
-    return true;
-}
 
-bool withdraw(Client& client, unsigned int dollars, uint8_t cents) {
-    if (!canWithdraw(client, dollars, cents)) {
+    if (!hasSufficientFunds(dollars, cents)) {
+        std::cerr << "[ERROR] Insufficient funds with overdraft protection." << std::endl;
         return false;
     }
-    client.checkingDollars -= dollars;
-    if (client.checkingCents < cents) {
-        client.checkingDollars -= 1;
-        client.checkingCents = 100 + client.checkingCents - cents;
+
+    int totalCents = checkingDollars * 100 + checkingCents - dollars * 100 - cents;
+
+    if (totalCents < 0) {
+        checkingDollars = 0;
+        checkingCents = static_cast<uint8_t>(-totalCents);
     } else {
-        client.checkingCents -= cents;
+        checkingDollars = totalCents / 100;
+        checkingCents = totalCents % 100;
     }
+
     return true;
 }
